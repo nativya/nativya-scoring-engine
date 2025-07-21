@@ -72,7 +72,6 @@ Pipfile.lock
 .DS_Store
 
 # Input/output data
-input/
 output/
 
 # Docker

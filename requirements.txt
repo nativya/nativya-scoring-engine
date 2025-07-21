@@ -1,0 +1,17 @@
+# Pydantic for settings and data models
+pydantic
+pydantic-settings
+
+# JSON streaming for large files
+ijson
+
+# NLP and Machine Learning
+sentence-transformers
+torch
+scikit-learn
+simhash
+nltk
+regex
+
+# For type hinting
+typing-extensions 
