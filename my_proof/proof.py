@@ -1,25 +1,29 @@
 import logging
 import json
-from typing import List, Tuple
+from typing import List, Tuple, Dict,Any
 import ijson
 
 from .config import settings
-from .models import ChatTurn, ValidationResult, FinalProof
+from .models_llm import ChatTurn, ValidationResult, FinalProof
 from .scorer import ChatScorer
+from my_proof.models.proof_response import ProofResponse
 
 class RegionalLanguageProof:
     """
     Orchestrates the entire data validation process for a single JSON file.
     """
-    def __init__(self, data_file_path: str):
+    def __init__(self, config:Dict[str,Any] , data_file_path: str):
         self.data_file_path = data_file_path
+        self.config=config
+        self.proof_response = ProofResponse(dlp_id=config['dlp_id'])
         self.scorer = ChatScorer()
+
 
     def generate_proof(self) -> FinalProof:
         """
         Processes the data file and generates the final proof JSON.
         """
-        logging.info(f"Starting proof generation for {self.data_file_path}")
+        logging.info(f"Starting proof generation.")
 
         validation_results: List[ValidationResult] = []
         all_fingerprints = set()

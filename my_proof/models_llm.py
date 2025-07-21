@@ -23,7 +23,7 @@ class FinalProof(BaseModel):
     The final JSON output object that will be printed to standard output.
     This structure is based on the Vana Satya proof requirements.
     """
-    dlp_id: int = 124 # Example DLP ID
+    dlp_id: int = 145 # Example DLP ID
     valid: bool
     score: float
     authenticity: float = 1.0  # Assuming data source is trusted for this example

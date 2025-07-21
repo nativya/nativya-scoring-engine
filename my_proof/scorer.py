@@ -5,7 +5,7 @@ from simhash import Simhash
 import torch
 
 from .config import settings
-from .models import ChatTurn
+from .models_llm import ChatTurn
 
 class ChatScorer:
     """
