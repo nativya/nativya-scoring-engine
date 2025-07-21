@@ -46,6 +46,36 @@ jobs:
         run: |
           echo "Docker image available at: ghcr.io/${{ github.repository }}/my-proof:${{ github.run_number }}" > release_body.txt
 
+      - name: Save Docker image as tar.gz
+        run: |
+          docker save ghcr.io/${{ github.repository }}/my-proof:${{ github.run_number }} | gzip > my-proof-${{ github.run_number }}.tar.gz
+
+      - name: Check tarball size
+        id: tarball_size
+        run: |
+          FILESIZE=$(stat -c%s "my-proof-${{ github.run_number }}.tar.gz")
+          echo "Tarball size: $FILESIZE bytes"
+          if [ $FILESIZE -ge 2147483648 ]; then
+            echo "::error::Tarball exceeds 2GB GitHub Release limit. Skipping upload."
+            echo "upload_tarball=false" >> $GITHUB_OUTPUT
+          else
+            echo "upload_tarball=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload tarball to Release
+        if: steps.tarball_size.outputs.upload_tarball == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Release v${{ github.run_number }}
+          body_path: release_body.txt
+          draft: false
+          prerelease: false
+          files: |
+            my-proof-${{ github.run_number }}.tar.gz
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
