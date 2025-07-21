@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy project files
 COPY ./requirements.txt /app/requirements.txt
-COPY ./src /app/src
+COPY ./my_proof /app/src
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
