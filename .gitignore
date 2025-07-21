@@ -77,5 +77,3 @@ output/
 # Docker
 *.log
 
-# Ignore requirements typo
-requirenments.txt 
