@@ -1,22 +1,24 @@
+# Git and virtual environments
+.git
+.venv/
+venv/
+env/
+
+# Python caches
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg-info/
+
+# Local data and secrets (adjust as needed)
+input/
+data/
 *.db
 *.sqlite3
 *.log
-*.csv
-*.tsv
-*.parquet
 *.json
-*.gz
-*.zip
-*.tar
-*.tar.gz
-*.ipynb
-.venv/
-venv/
-.git/
-input/
-tests/
-data/ 
