@@ -14,6 +14,8 @@ COPY requirements.txt .
 # Install dependencies into a specific folder
 RUN pip install --no-cache-dir --prefix="/install" -r requirements.txt
 
+# Add /install to PYTHONPATH so python can find installed packages
+ENV PYTHONPATH="/install/lib/python3.10/site-packages"
 # Download NLTK data
 RUN python -m nltk.downloader -d /install/nltk_data punkt
 
