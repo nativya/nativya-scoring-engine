@@ -78,3 +78,6 @@ output/
 *.log
 
 .venv
+
+.env
+my_proof/.env

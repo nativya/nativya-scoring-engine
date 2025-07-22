@@ -5,9 +5,14 @@ pydantic-settings
 # JSON streaming for large files
 ijson
 
+# Specify CPU-only torch before sentence-transformers
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+torchaudio
+torchvision
+
 # NLP and Machine Learning
 sentence-transformers
-torch
 scikit-learn
 simhash
 nltk
