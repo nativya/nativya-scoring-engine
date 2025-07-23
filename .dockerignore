@@ -16,9 +16,8 @@ dist/
 *.egg-info/
 
 # Local data and secrets (adjust as needed)
-input/
 data/
 *.db
 *.sqlite3
 *.log
-*.json
+
