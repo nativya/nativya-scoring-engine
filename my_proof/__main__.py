@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 def load_config() -> Dict[str, Any]:
     """Load proof configuration from environment variables."""
     config = {
-        'dlp_id': 145,  # Set your own DLP ID here
+        'dlp_id': 0,  # Set your own DLP ID here
         'input_dir': INPUT_DIR,
         'user_email': os.environ.get('USER_EMAIL', None),
     }
@@ -29,7 +29,8 @@ def main():
     logging.info("Starting Vana Satya Proof Task")
     config = load_config()
 
-    # Ensure the output directory exists
+    # Output will be emitted via STDOUT for TEE parsing.
+    # Keeping the output directory creation is unnecessary now, but harmless if left.
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     # Try to read from stdin first (TEE request format)
@@ -75,7 +76,7 @@ def main():
         
         if not os.path.exists(input_file_path):
             logging.error(f"Input file not found: {input_file_path}")
-            # Write an error proof to the output
+            # Emit an error proof JSON to STDOUT for the TEE to parse
             error_proof = {
                 "dlp_id": config.get("dlp_id", 124),
                 "valid": False,
@@ -85,10 +86,8 @@ def main():
                 "attributes": {"error": "No input data found - neither stdin nor data.json"},
                 "metadata": {}
             }
-            output_path = os.path.join(OUTPUT_DIR, "results.json")
-            with open(output_path, 'w') as f:
-                json.dump(error_proof, f, indent=2)
-            sys.exit(1)
+            print(json.dumps(error_proof))
+            return
 
         # Initialize and run the proof generation from file
         with open(input_file_path, 'r') as f:
@@ -112,13 +111,9 @@ def main():
     proof_generator = RegionalLanguageProof(data_file_path=input_file_path, config=config, uniqueness_hashes=uniqueness_hashes)
     final_proof = proof_generator.generate_proof()
 
-    # Write the final proof to the output directory
-    output_path = os.path.join(OUTPUT_DIR, "results.json")
-    with open(output_path, 'w') as f:
-        # Use .model_dump_json for Pydantic v2+ for clean JSON output
-        f.write(final_proof.model_dump_json(indent=2))
+    print(final_proof.model_dump_json())
 
-    logging.info(f"Proof successfully generated and saved to {output_path}")
+    logging.info("Proof successfully generated and printed to STDOUT")
     logging.info(f"Final proof summary: Valid={final_proof.valid}, Score={final_proof.score:.3f}, Quality={final_proof.quality:.3f}, Uniqueness={final_proof.uniqueness:.3f}")
     
     # Clean up temporary file if created
